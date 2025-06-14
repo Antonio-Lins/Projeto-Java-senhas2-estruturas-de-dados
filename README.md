@@ -79,7 +79,6 @@ implementadas no pacote `com.example.datastructures`:
 |------------------------|--------------|------------|-----------|
 | selection sort         | 142          | 136        | 149       |
 | insertion sort         | 128          | 121        | 133       |
-| bubble sort            | 198          | 185        | 207       |
 | merge sort             | 47           | 43         | 46        |
 | quick sort             | 39           | 38         | 41        |
 | quick sort (mediana)   | 36           | 34         | 37        |
