@@ -3,7 +3,7 @@
 este projeto em java realiza a leitura, classificação, formatação, filtragem e ordenação de senhas a partir de arquivos `.csv`. o objetivo é manipular os dados de maneira eficiente, aplicando regras de classificação, formatando datas e gerando arquivos de saída organizados.
 
 ## 🚀 evolução do projeto
-para atender a requisitos de implementação de estruturas de dados personalizadas, o projeto foi evoluído para substituir o uso de coleções nativas do java (como `arraylist`, `hashmap`, `linkedlist`) por implementações próprias, garantindo maior controle e demonstrando a compreensão fundamental das estruturas de dados.
+para atender a requisitos de implementação de estruturas de dados personalizadas, o projeto foi evoluído para substituir o uso de coleções nativas do java (como `arraylist`) por implementações próprias, garantindo maior controle e demonstrando a compreensão fundamental das estruturas de dados.
 
 ---
 
