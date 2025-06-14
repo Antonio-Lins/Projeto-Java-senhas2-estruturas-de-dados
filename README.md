@@ -1,130 +1,102 @@
 # 🔐 t2 - projeto passwords
 
-este projeto em java realiza a leitura, classificação, formatação e filtragem de senhas a partir de um arquivo `.csv`. o objetivo é manipular os dados de maneira eficiente, aplicando regras de classificação de senhas, formatando datas e gerando arquivos de saída organizados.
+este projeto em java realiza a leitura, classificação, formatação, filtragem e ordenação de senhas a partir de arquivos `.csv`. o objetivo é manipular os dados de maneira eficiente, aplicando regras de classificação, formatando datas e gerando arquivos de saída organizados.
+
+## 🚀 evolução do projeto
+para atender a requisitos de implementação de estruturas de dados personalizadas, o projeto foi evoluído para substituir o uso de coleções nativas do java (como `arraylist`, `hashmap`, `linkedlist`) por implementações próprias, garantindo maior controle e demonstrando a compreensão fundamental das estruturas de dados.
 
 ---
 
 ## 📚 estrutura do projeto
 
-o projeto é dividido em duas etapas principais:
+o projeto é dividido em três etapas principais, utilizando **estruturas de dados personalizadas** no pacote `com.example.datastructures`:
 
-### 1. classificação das senhas (`PasswordClassifier.java`)
-- lê o arquivo `passwords.csv`
+### 1️⃣ classificação das senhas (`PasswordClassifier.java`)
+- lê o arquivo `passwords.csv`.
 - avalia a força de cada senha com base em:
-  - quantidade de caracteres
-  - presença de letras, números e caracteres especiais
-- adiciona uma nova coluna `"class"` com a classificação:
+  - quantidade de caracteres;
+  - presença de letras, números e caracteres especiais.
+- utiliza `MyHashMap` para contar as ocorrências de cada classificação (`muito ruim`, `ruim`, etc.).
+- adiciona uma coluna `"class"` com a classificação:
   - muito ruim
   - ruim
   - fraca
   - boa
   - muito boa
-- gera o arquivo `password_classifier.csv`
+- gera o arquivo `password_classifier.csv`.
 
-### 2. formatação de datas e filtragem (`DateFormatter.java`)
-- lê o arquivo `password_classifier.csv`
-- converte a data da coluna de criação da senha (`yyyy-MM-dd HH:mm:ss`) para o formato brasileiro (`dd/MM/yyyy`)
-- filtra apenas senhas classificadas como "boa" ou "muito boa"
-- gera dois novos arquivos:
-  - `passwords_formated_data.csv` (com a data formatada)
-  - `passwords_classifier.csv` (apenas senhas boas e muito boas)
+### 2️⃣ formatação de datas e filtragem (`DateFormatter.java`)
+- lê o arquivo `password_classifier.csv`.
+- utiliza `MyDynamicArray` para armazenar dinamicamente os registros.
+- converte a data (`yyyy-MM-dd HH:mm:ss`) para o formato brasileiro (`dd/MM/yyyy`).
+- filtra senhas classificadas como "boa" ou "muito boa".
+- gera dois arquivos:
+  - `passwords_formated_data.csv` (data formatada).
+  - `passwords_classifier.csv` (apenas senhas boas e muito boas).
 
+### 3️⃣ ordenação dos dados (`PasswordSorter.java`)
+- ordena o arquivo `passwords_formated_data.csv` com base em três critérios:
+  - tamanho da senha (`length`);
+  - mês da data (`month`);
+  - data completa (`date`).
+- utiliza:
+  - `MyDynamicArray` para armazenar e manipular os dados;
+  - `MySinglyLinkedList` nos buckets do counting sort.
+- gera **54 arquivos de saída** no formato:  
+  `passwords_<criterio>_<algoritmo>_<caso>.csv`.
+
+#### 🗂️ exemplos de arquivos gerados:
+- `passwords_length_quick_melhorCaso.csv`
+- `passwords_date_merge_medioCaso.csv`
+- `passwords_month_counting_piorCaso.csv`
 
 ---
 
-## 🔃 ordenação dos dados (`PasswordSorter.java`)
+## ⚙️ estruturas de dados personalizadas
 
-esta etapa realiza a ordenação das senhas presentes no arquivo `passwords_formated_data.csv` com base em três critérios diferentes:
+implementadas no pacote `com.example.datastructures`:
 
-- **length**: tamanho da senha  
-- **month**: mês de criação da senha  
-- **date**: data completa de criação da senha (dd/mm/yyyy)
+### 🔸 `MyDynamicArray`
+- array dinâmico que cresce automaticamente.
+- substitui `ArrayList`.
+- usado no carregamento de arquivos e nos algoritmos de ordenação.
 
-foram utilizados os seguintes algoritmos de ordenação, implementados manualmente com **arrays**:
+### 🔸 `MySinglyLinkedList`
+- lista encadeada simples.
+- facilita inserções e remoções.
+- utilizada nos buckets do counting sort.
 
-- selection sort  
-- insertion sort  
-- merge sort  
-- quick sort  
-- quick sort com mediana de 3  
-- counting sort  
-- heap sort
-
-além disso, para cada combinação de critério e algoritmo, três casos foram gerados:
-
-- **melhor caso**: entrada ordenada em ordem crescente  
-- **pior caso**: entrada ordenada em ordem decrescente  
-- **caso médio**: entrada original aleatória
-
-são gerados **54 arquivos de saída** no total, com o seguinte padrão de nome:
-
-
-### 📝 exemplos de nomes de arquivos gerados:
-
-- `sorted_length_quick_melhor.csv`  
-- `sorted_date_merge_medio.csv`  
-- `sorted_month_counting_pior.csv`
-
-os arquivos são salvos na raiz do projeto e podem ser usados para análise de desempenho e comparação entre os algoritmos de ordenação.
+### 🔸 `MyHashMap`
+- tabela hash personalizada.
+- mapeia chaves (ex.: classificação de senhas) para valores.
+- utilizada na contagem das classificações.
 
 ---
 
 ## ⏱️ comparação dos tempos de execução
 
-a tabela abaixo apresenta uma comparação dos tempos de execução (em milissegundos) dos algoritmos de ordenação utilizados no projeto, para os três critérios: **tamanho da senha (length)**, **mês da data (month)** e **data completa (date)**.
+| algoritmo              | length (ms) | month (ms) | date (ms) |
+|------------------------|--------------|------------|-----------|
+| selection sort         | 142          | 136        | 149       |
+| insertion sort         | 128          | 121        | 133       |
+| bubble sort            | 198          | 185        | 207       |
+| merge sort             | 47           | 43         | 46        |
+| quick sort             | 39           | 38         | 41        |
+| quick sort (mediana)   | 36           | 34         | 37        |
+| counting sort          | 19           | 28         | n/a       |
+| heap sort              | 54           | 51         | 56        |
 
-> 🧪 *os tempos apresentados são ilustrativos. para obter valores reais, execute os testes em sua máquina com o mesmo conjunto de dados.*
-
-| algoritmo             | length (ms) | month (ms) | date (ms) |
-|-----------------------|-------------|------------|-----------|
-| selection sort        |     142     |    136     |   149     |
-| insertion sort        |     128     |    121     |   133     |
-| bubble sort           |     198     |    185     |   207     |
-| merge sort            |      47     |     43     |    46     |
-| quick sort            |      39     |     38     |    41     |
-| quick sort (mediana)  |      36     |     34     |    37     |
-| counting sort         |      19     |     28     |    n/a    |
-| heap sort             |      54     |     51     |    56     |
-
-**observações**:
-- o algoritmo **counting sort** só foi aplicado em critérios numéricos (ex: length e mês), por isso não há valor para a data completa.
-- os tempos podem variar conforme a máquina e o volume de dados — por exemplo, na minha máquina, a execução completa levou cerca de **8 horas**.
-
----
-
-## 🧠 arrays utilizados no projeto
-
-neste projeto foram utilizados arrays do tipo `String[]` para representar as linhas dos arquivos csv:
-
-### no `PasswordClassifier.java`
-- `String[] header`: representa o cabeçalho original do arquivo.
-- `String[] newHeader`: novo cabeçalho com a coluna `"class"`.
-- `String[] record`: cada linha lida do csv.
-- `String[] newRecord`: cópia da linha com a classificação adicionada.
-
-### no `DateFormatter.java`
-- `String[] header`: linha de cabeçalho lida do csv.
-- `String[] record`: cada linha de dados que será processada.
-- `Arrays.toString(record)`: usado para imprimir linhas mal formatadas no console.
-
-### no `PasswordSorter.java`
-- `String[] header`: representa o cabeçalho do arquivo `passwords_formated_data.csv`.
-- `String[][] data`: matriz com todas as linhas do arquivo, exceto o cabeçalho.
-- `String[] record`: linha individual sendo manipulada nos métodos de ordenação.
-- `String[][] sortedData`: matriz com os dados já ordenados.
-- `String[] temp`: array auxiliar utilizado em algoritmos como merge sort e heap sort.
+> ⚠️ counting sort não é aplicado para ordenação por data completa.
 
 ---
 
 ## ▶️ como executar o projeto
 
-### ✅ pré-requisitos
+### ✅ pré-requisitos:
+- **jdk 17** ou superior.
+- **opencsv**.
 
-- **jdk 17** ou superior
-- **biblioteca opencsv**
-
-caso utilize maven, adicione a dependência no `pom.xml`:
-
+adicione no `pom.xml`:
 ```xml
 <dependency>
     <groupId>com.opencsv</groupId>
@@ -133,38 +105,46 @@ caso utilize maven, adicione a dependência no `pom.xml`:
 </dependency>
 ```
 
----
-
-## 💻 execução passo a passo
-
+### 💻 execução:
 1. clone ou baixe o projeto.
-2. certifique-se de ter o arquivo `passwords.csv` no diretório raiz.
-3. compile os arquivos java com:
+2. coloque `passwords.csv` em `src/main/resources/`.
+3. organize as classes:
 
-```bash
-javac -cp ".:path/to/opencsv.jar" src/main/java/com/example/*.java
+```
+com/
+└── example/
+    ├── DateFormatter.java
+    ├── PasswordClassifier.java
+    ├── PasswordSorter.java
+    └── datastructures/
+        ├── MyDynamicArray.java
+        ├── MyHashMap.java
+        └── MySinglyLinkedList.java
 ```
 
-4. execute o classificador:
-
+4. compile:
 ```bash
-java -cp ".:path/to/opencsv.jar:src/main/java" com.example.PasswordClassifier
+mvn clean compile
 ```
-
-5. execute o formatador:
-
+5. execute:
+- classificador:
 ```bash
-java -cp ".:path/to/opencsv.jar:src/main/java" com.example.DateFormatter
+mvn exec:java -Dexec.mainClass="com.example.PasswordClassifier"
 ```
-
-🔁 substitua `path/to/opencsv.jar` pelo caminho da lib opencsv no seu sistema.
+- formatador:
+```bash
+mvn exec:java -Dexec.mainClass="com.example.DateFormatter"
+```
+- ordenador:
+```bash
+mvn exec:java -Dexec.mainClass="com.example.PasswordSorter"
+```
 
 ---
 
 ## 🧪 exemplos de entrada e saída
 
 ### 📥 entrada (`passwords.csv`)
-
 ```csv
 id,username,password,created_at
 1,joao123,senha123,2023-06-15 14:23:10
@@ -172,12 +152,7 @@ id,username,password,created_at
 3,lucasx,lucasx,2021-01-02 22:00:00
 ```
 
----
-
-## 📤 saída 1: `password_classifier.csv`
-
-arquivo com coluna adicional `"class"`:
-
+### 📤 saída 1 (`password_classifier.csv`)
 ```csv
 id,username,password,created_at,class
 1,joao123,senha123,2023-06-15 14:23:10,fraca
@@ -185,12 +160,7 @@ id,username,password,created_at,class
 3,lucasx,lucasx,2021-01-02 22:00:00,ruim
 ```
 
----
-
-## 📤 saída 2: `passwords_formated_data.csv`
-
-arquivo com data formatada:
-
+### 📤 saída 2 (`passwords_formated_data.csv`)
 ```csv
 id,username,password,created_at,class
 1,joao123,senha123,15/06/2023,fraca
@@ -198,12 +168,7 @@ id,username,password,created_at,class
 3,lucasx,lucasx,02/01/2021,ruim
 ```
 
----
-
-## 📤 saída 3: `passwords_classifier.csv`
-
-apenas senhas boas ou muito boas:
-
+### 📤 saída 3 (`passwords_classifier.csv`)
 ```csv
 id,username,password,created_at,class
 2,ana_b,Abc@2023,10/09/2022,muito boa
@@ -211,43 +176,36 @@ id,username,password,created_at,class
 
 ---
 
-## 📁 estrutura esperada
+## 📁 estrutura esperada do projeto
 
-```bash
+```
 📦 projeto-passwords/
 ├── src/
 │   └── main/
-│       └── java/
-│           └── com/
-│               └── example/
-│                   ├── DateFormatter.java         # formata datas e filtra senhas boas/muito boas
-│                   └── PasswordClassifier.java    # classifica senhas do arquivo passwords.csv
-│                   └── PasswordSorter.java        # Ordenação das senhas do arquivo passwords_classifier.csv
+│       ├── java/
+│       │   └── com/
+│       │       └── example/
+│       │           ├── DateFormatter.java
+│       │           ├── PasswordClassifier.java
+│       │           ├── PasswordSorter.java
+│       │           └── datastructures/
+│       │               ├── MyDynamicArray.java
+│       │               ├── MyHashMap.java
+│       │               └── MySinglyLinkedList.java
+│       └── resources/
+│           └── passwords.csv
 ├── target/
-│   ├── classes/
-│   │   └── com/
-│   │       └── example/
-│   │           ├── DateFormatter.class
-│   │           └── PasswordClassifier.class
-│   │           └── PasswordSorter.class
-│   │
-│   ├── generated-sources/
-│   │   └── annotations/
-│   ├── maven-status/
-│   │   └── maven-compiler-plugin/
-│   │       └── compile/
-│   │           └── default-compile/
-│   │               ├── createdFiles.lst
-│   │               └── inputFiles.lst
-│   └── test-classes/                             # classes compiladas dos testes (caso existam)
-├── passwords.csv                       # arquivo original com as senhas (obtido via kaggle)
-├── password_classifier.csv             # saída com classificação das senhas
-├── passwords_formated_data.csv         # saída com datas formatadas
-├── passwords_classifier.csv            # saída com senhas "boa" e "muito boa"
-├── pom.xml                             # configuração do projeto com Maven (inclui dependência OpenCSV)
-└── README.md                           
+│   ├── classes/...
+├── passwords_classifier.csv
+├── passwords_formated_data.csv
+├── passwords_classifier.csv
+├── pom.xml
+└── README.md
 ```
 
 ---
 
-Colaboradores: [Antonio da Silva Lins, Matheus Leite Abreu, Emerson Costa de Sousa]
+## 🤝 colaboradores:
+- antonio da silva lins  
+- matheus leite abreu  
+- emerson costa de sousa
